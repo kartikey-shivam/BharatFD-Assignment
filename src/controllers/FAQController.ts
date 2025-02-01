@@ -22,12 +22,16 @@ class FAQController {
                 res.json(faqs);
                 return;
             }
-            console.log("lang", lang)
-            const translatedFaqs = await Promise.all(faqs.map(async (faq) => ({
-                ...faq.toObject(),
-                question: await faq.getTranslatedContent('question', lang),
-                answer: await faq.getTranslatedContent('answer', lang)
-            })));
+            const translatedFaqs = await Promise.all(
+                faqs.map(async (faq) => ({
+                    _id: faq._id,
+                    question:await faq.getTranslatedContent('question', lang as string),
+                    answer:await faq.getTranslatedContent('answer', lang as string),
+                    isActive: faq.isActive,
+                    createdAt: faq.createdAt,
+                    updatedAt: faq.updatedAt
+                }))
+            );
             res.json(translatedFaqs);
         } catch (error) {
             const err = error as Error;
@@ -37,18 +41,40 @@ class FAQController {
 
     public async getOne(req: Request, res: Response): Promise<void> {
         try {
-            const faq = await FAQ.findById(req.params.id);
+            const { id } = req.params;
+            const { lang = 'en' } = req.query;
+            
+            const faq = await FAQ.findById(id);
             if (!faq) {
-                res.status(404).json({ message: 'FAQ not found' });
+                res.status(404).json({
+                    message: 'faq.not_found'
+                });
                 return;
             }
-            res.json(faq);
+            if (lang === 'en') {
+                res.json(faq);
+                return;
+            }
+            const translatedFaq = {
+                _id: faq._id,
+                question:  await faq.getTranslatedContent('question', lang as string),
+                answer: await faq.getTranslatedContent('answer', lang as string),
+                isActive: faq.isActive,
+                createdAt: faq.createdAt,
+                updatedAt: faq.updatedAt
+            };
+    
+            res.status(200).json({
+                message: 'faq.fetched',
+                data: { faq: translatedFaq }
+            });
         } catch (error) {
-            const err = error as Error;
-            res.status(500).json({ error: err.message });
+            res.status(500).json({
+                message: 'error.internal',
+                error
+            });
         }
     }
-
     public async update(req: Request, res: Response): Promise<void> {
         try {
             const faq = await FAQ.findByIdAndUpdate(req.params.id, req.body, { new: true });

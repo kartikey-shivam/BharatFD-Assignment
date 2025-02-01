@@ -7,14 +7,12 @@
   const FAQSchema = new Schema(
       {
           question: {
-              type: Map,
-              of: String,
+              type: String,
               required: true,
               default: { en: '' }
           },
           answer: {
-              type: Map,
-              of: String,
+              type: String,
               required: true,
               default: { en: '' }
           },
@@ -31,19 +29,18 @@
     const translationService = TranslationService.getInstance();
     const translatedField = `${field}_${lang}`;
     
-
     const originalContent = this.get(field);
     if (!originalContent) {
         return "";
     }
 
-    try {
+    try {   
+        
    
         const translatedContent = await translationService.translate(originalContent, lang);
 
-      
+        console.log(translatedContent,42);
         this.set(translatedField, translatedContent);
-        await this.save();
 
         return translatedContent;
     } catch (error) {
