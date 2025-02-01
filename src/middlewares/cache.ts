@@ -11,15 +11,18 @@ class CacheMiddleware {
     private redisClient: RedisClientType;
 
     private constructor() {
-        this.redisClient = createClient({ url: process.env.REDIS_URL });
+        this.redisClient = createClient({ url: process.env.REDIS_URL || 'redis://localhost:6379' });
+    }
 
-        this.redisClient.connect().catch((error) => {
-            console.error("Redis Connection Error:", error);
-        });
-
-        this.redisClient.on("error", (err) => {
-            console.error("Redis Client Error:", err);
-        });
+    private async connect() {
+        try {
+            if (!this.redisClient.isOpen) {
+                await this.redisClient.connect();
+                console.log('✅ Redis Connected Successfully');
+            }
+        } catch (error) {
+            console.error("❌ Redis Connection Error:", error);
+        }
     }
 
     public static getInstance(): CacheMiddleware {
