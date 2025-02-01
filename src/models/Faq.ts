@@ -1,34 +1,52 @@
+  import mongoose, { Schema, Document } from "mongoose";
+  import { IFAQ } from "../interfaces/faq";
+  import TranslationService from "../services/translationService";
+  export interface FAQDocument extends IFAQ, Document {
+    getTranslatedContent(field: string, lang: string): Promise<string>;
+}
+  const FAQSchema = new Schema(
+      {
+          question: {
+              type: Map,
+              of: String,
+              required: true,
+              default: { en: '' }
+          },
+          answer: {
+              type: Map,
+              of: String,
+              required: true,
+              default: { en: '' }
+          },
+          isActive: {
+              type: Boolean,
+              default: true
+          }
+      },
+      {
+          timestamps: true
+      }
+  );
 
-import mongoose, { Schema, Document } from "mongoose";
-import { IFAQ } from "../interfaces/faq";
+  FAQSchema.methods.getTranslatedContent = async function(field: string, lang: string): Promise<string> {
+      const translationService = TranslationService.getInstance();
+      const translatedField = `${field}_${lang}`;
 
-const FAQSchema = new Schema(
-    {
-        question: {
-            type: Map,
-            of: String,
-            required: true,
-            default: { en: '' }
-        },
-        answer: {
-            type: Map,
-            of: String,
-            required: true,
-            default: { en: '' }
-        },
-        isActive: {
-            type: Boolean,
-            default: true
-        }
-    },
-    {
-        timestamps: true
-    }
-);
+      const originalContent = this.get(field);
+      if (!originalContent) {
+          return "";
+      }
 
-FAQSchema.methods.getTranslation = function(field: 'question' | 'answer', lang: string): string {
-    const content = this[field];
-    return content.get(lang) || content.get('en') || '';
-};
+      try {
+          const translatedContent = await translationService.translate(originalContent, lang);
+        
+          this.set(translatedField, translatedContent);
+          await this.save();
 
-export default mongoose.model<IFAQ>("FAQ", FAQSchema);
+          return translatedContent;
+      } catch (error) {
+          return originalContent;
+      }
+  };
+
+  export default mongoose.model<IFAQ>("FAQ", FAQSchema);

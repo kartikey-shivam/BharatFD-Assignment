@@ -25,8 +25,8 @@ class FAQController {
 
             const translatedFaqs = await Promise.all(faqs.map(async (faq) => ({
                 ...faq.toObject(),
-                // question: await faq.getTranslatedContent('question', lang),
-                // answer: await faq.getTranslatedContent('answer', lang)
+                question: await faq.getTranslation('question', lang),
+                answer: await faq.getTranslation('answer', lang)
             })));
             res.json(translatedFaqs);
         } catch (error) {
