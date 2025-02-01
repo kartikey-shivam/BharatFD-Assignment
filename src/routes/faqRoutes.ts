@@ -1,4 +1,3 @@
-import express from 'express';
 import FAQController from '../controllers/FAQController';
 import { cacheMiddleware } from '../middlewares/cache';
 import { Router } from 'express';

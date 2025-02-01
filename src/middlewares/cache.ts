@@ -3,7 +3,9 @@ import { createClient, RedisClientType } from 'redis';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
+interface CustomResponse extends Response {
+    success(message: string, data?: any, statusCode?: number): void;
+}
 class CacheMiddleware {
     private static instance: CacheMiddleware;
     private redisClient: RedisClientType;
@@ -46,18 +48,19 @@ class CacheMiddleware {
     }
 
     public cache = async (req: Request, res: Response, next: NextFunction) => {
+        const customRes = res as CustomResponse;
         const cacheKey = `api_${req.originalUrl}`;
 
         try {
             const cachedData = await this.getCachedData(cacheKey);
             if (cachedData) {
                 console.log(`Cache HIT for key: ${cacheKey}`);
-                return res.success('data.fetched', JSON.parse(cachedData));
+                return customRes.success('data.fetched', JSON.parse(cachedData));
             }
 
             console.log(`Cache MISS for key: ${cacheKey}`);
-            const originalSuccess = res.success;
-            res.success = function(message: string, data?: any, statusCode?: number) {
+            const originalSuccess = customRes.success;
+            customRes.success = function(message: string, data?: any, statusCode?: number) {
                 CacheMiddleware.getInstance().setCachedData(cacheKey, JSON.stringify(data));
                 originalSuccess.call(this, message, data, statusCode);
             };
