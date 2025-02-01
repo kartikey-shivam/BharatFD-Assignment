@@ -27,26 +27,29 @@
           timestamps: true
       }
   );
+  FAQSchema.methods.getTranslatedContent = async function (field: string, lang: string): Promise<string> {
+    const translationService = TranslationService.getInstance();
+    const translatedField = `${field}_${lang}`;
+    
 
-  FAQSchema.methods.getTranslatedContent = async function(field: string, lang: string): Promise<string> {
-      const translationService = TranslationService.getInstance();
-      const translatedField = `${field}_${lang}`;
+    const originalContent = this.get(field);
+    if (!originalContent) {
+        return "";
+    }
 
-      const originalContent = this.get(field);
-      if (!originalContent) {
-          return "";
-      }
+    try {
+   
+        const translatedContent = await translationService.translate(originalContent, lang);
 
-      try {
-          const translatedContent = await translationService.translate(originalContent, lang);
-        
-          this.set(translatedField, translatedContent);
-          await this.save();
+      
+        this.set(translatedField, translatedContent);
+        await this.save();
 
-          return translatedContent;
-      } catch (error) {
-          return originalContent;
-      }
-  };
+        return translatedContent;
+    } catch (error) {
+        return originalContent; 
+    }
+};
 
-  export default mongoose.model<IFAQ>("FAQ", FAQSchema);
+export default mongoose.model<FAQDocument>("FAQ", FAQSchema);
+

@@ -29,42 +29,38 @@ class CacheMiddleware {
         return CacheMiddleware.instance;
     }
 
-    private async getCachedData(key: string): Promise<string | null> {
+    private async setCachedData(key: string, data: any, lang: string='en'): Promise<void> {
         try {
-            return await this.redisClient.get(key);
-        } catch (error) {
-            console.error("Redis GET Error:", error);
-            return null;
-        }
-    }
-
-    private async setCachedData(key: string, value: string): Promise<void> {
-        try {
-            await this.redisClient.set(key, value, { EX: 3600 });
-            console.log(`Cache SET Successful for key: ${key}`);
+            
+            await this.redisClient.set(key,  JSON.stringify(data), { EX: 3600 });
+            
+           
         } catch (error) {
             console.error("Redis SET Error:", error);
         }
     }
 
-    public cache = async (req: Request, res: Response, next: NextFunction) => {
-        const customRes = res as CustomResponse;
+    public cache = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const cacheKey = `api_${req.originalUrl}`;
-
+        const lang = req.query.lang as string || 'en';
         try {
-            const cachedData = await this.getCachedData(cacheKey);
+            const cachedData = await this.redisClient.get(cacheKey);
             if (cachedData) {
-                console.log(`Cache HIT for key: ${cacheKey}`);
-                return customRes.success('data.fetched', JSON.parse(cachedData));
+              
+                res.status(200).json({
+                    message: 'Data retrieved from cache',
+                    data: JSON.parse(cachedData)
+                });
+                return;
             }
-
-            console.log(`Cache MISS for key: ${cacheKey}`);
-            const originalSuccess = customRes.success;
-            customRes.success = function(message: string, data?: any, statusCode?: number) {
-                CacheMiddleware.getInstance().setCachedData(cacheKey, JSON.stringify(data));
-                originalSuccess.call(this, message, data, statusCode);
+    
+         
+            const originalJson = res.json;
+            res.json = function(body: any) {
+                CacheMiddleware.getInstance().setCachedData(cacheKey, body,lang);
+                return originalJson.call(this, body);
             };
-
+    
             next();
         } catch (error) {
             next();

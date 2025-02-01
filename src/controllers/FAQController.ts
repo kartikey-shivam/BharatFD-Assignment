@@ -22,11 +22,11 @@ class FAQController {
                 res.json(faqs);
                 return;
             }
-
+            console.log("lang", lang)
             const translatedFaqs = await Promise.all(faqs.map(async (faq) => ({
                 ...faq.toObject(),
-                question: await faq.getTranslation('question', lang),
-                answer: await faq.getTranslation('answer', lang)
+                question: await faq.getTranslatedContent('question', lang),
+                answer: await faq.getTranslatedContent('answer', lang)
             })));
             res.json(translatedFaqs);
         } catch (error) {
