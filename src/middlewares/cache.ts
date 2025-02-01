@@ -48,20 +48,20 @@ class CacheMiddleware {
         const lang = req.query.lang as string || 'en';
         try {
             const cachedData = await this.redisClient.get(cacheKey);
-            // if (cachedData) {
+            if (cachedData) {
               
-                // res.status(200).json({
-                //     message: 'Data retrieved from cache',
-                //     data: JSON.parse(cachedData)
-                // });
-                // return;
-            // }
+                res.status(200).json({
+                    message: 'Data retrieved from cache',
+                    data: JSON.parse(cachedData)
+                });
+                return;
+            }
     
          
             const originalJson = res.json;
             res.json = function(body: any) {
                 console.log('Response body:', body.question);
-                // CacheMiddleware.getInstance().setCachedData(cacheKey, body,lang);
+                CacheMiddleware.getInstance().setCachedData(cacheKey, body,lang);
                 return originalJson.call(this, body);
             };
     
