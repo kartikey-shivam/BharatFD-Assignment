@@ -76,7 +76,7 @@ class CacheMiddleware {
             const originalJson = res.json;
             res.json = function(body: any) {
                 console.log(` Caching response for key: ${cacheKey}`);
-                CacheMiddleware.getInstance().setCachedData(cacheKey, body, lang);
+                // CacheMiddleware.getInstance().setCachedData(cacheKey, body, lang);
                 return originalJson.call(this, body);
             };
 
@@ -106,7 +106,6 @@ class CacheMiddleware {
 
     public clearCache = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const id = req.params.id;
-        console.log(`🔄 Attempting to clear cache for ID: ${id}`);
         
         try {
             await this.ensureConnection();

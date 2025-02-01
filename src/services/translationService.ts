@@ -10,6 +10,7 @@
 
       private constructor() {
           process.env.GOOGLE_APPLICATION_CREDENTIALS = path.resolve(__dirname, "../config/translate-key.json");
+            
           this.translator = new Translate();
       }
 
@@ -27,7 +28,6 @@
 
           try {
               const [translation] = await this.translator.translate(text, targetLang);
-              console.log(`Translation Successful: ${translation}`);
               return translation;
           } catch (error) {
               console.error("Google Translate API Error:", error);

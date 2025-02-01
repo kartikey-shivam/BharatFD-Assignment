@@ -27,6 +27,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/mongoose": "^5.11.96",
+    "@types/sanitize-html": "^2.13.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cors": "^2.8.5",
@@ -38,6 +39,7 @@
     "mongoose": "^8.9.5",
     "morgan": "^1.10.0",
     "redis": "^4.7.0",
+    "sanitize-html": "^2.14.0",
     "typescript": "^5.7.3",
     "zod": "^3.24.1"
   },
