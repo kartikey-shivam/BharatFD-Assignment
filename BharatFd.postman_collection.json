@@ -15,42 +15,9 @@
             "body": {
               "mode": "raw",
               "raw": {
-                "question": {
-                  "en": "What is BharatFD?",
-                  "hi": "BharatFD क्या है?",
-                  "bn": "BharatFD কি?"
-                },
-                "answer": {
-                  "en": "BharatFD is a financial platform.",
-                  "hi": "BharatFD एक वित्तीय प्लेटफॉर्म है।",
-                  "bn": "BharatFD একটি আর্থিক প্ল্যাটফর্ম।"
-                },
+                "question": "What is BharatFD?",
+                "answer":"BharatFD is a financial platform.",
                 "isActive": true
-              }
-            }
-          },
-          "response": {
-            "status": "Created",
-            "code": 201,
-            "body": {
-              "message": "faq.created",
-              "data": {
-                "faq": {
-                  "_id": "65f1a2b3c4d5e6f7g8h9i0j1",
-                  "question": {
-                    "en": "What is BharatFD?",
-                    "hi": "BharatFD क्या है?",
-                    "bn": "BharatFD কি?"
-                  },
-                  "answer": {
-                    "en": "BharatFD is a financial platform.",
-                    "hi": "BharatFD एक वित्तीय प्लेटफॉर्म है।",
-                    "bn": "BharatFD একটি আর্থিক প্ল্যাটফর্ম।"
-                  },
-                  "isActive": true,
-                  "createdAt": "2024-03-15T10:30:00.000Z",
-                  "updatedAt": "2024-03-15T10:30:00.000Z"
-                }
               }
             }
           }
@@ -113,41 +80,9 @@
             "body": {
               "mode": "raw",
               "raw": {
-                "question": {
-                  "en": "What are BharatFD's features?",
-                  "hi": "BharatFD की विशेषताएं क्या हैं?",
-                  "bn": "BharatFD এর বৈশিষ্ট্য কি কি?"
-                },
-                "answer": {
-                  "en": "BharatFD offers multiple financial services.",
-                  "hi": "BharatFD कई वित्तीय सेवाएं प्रदान करता है।",
-                  "bn": "BharatFD বিভিন্ন আর্থিক পরিষেবা প্রদান করে।"
-                },
+                "question": "What are BharatFD's features?",
+                "answer": "BharatFD offers multiple financial services.",
                 "isActive": true
-              }
-            }
-          },
-          "response": {
-            "status": "OK",
-            "code": 200,
-            "body": {
-              "message": "faq.updated",
-              "data": {
-                "faq": {
-                  "_id": "65f1a2b3c4d5e6f7g8h9i0j1",
-                  "question": {
-                    "en": "What are BharatFD's features?",
-                    "hi": "BharatFD की विशेषताएं क्या हैं?",
-                    "bn": "BharatFD এর বৈশিষ্ট্য কি কি?"
-                  },
-                  "answer": {
-                    "en": "BharatFD offers multiple financial services.",
-                    "hi": "BharatFD कई वित्तीय सेवाएं प्रदान करता है।",
-                    "bn": "BharatFD বিভিন্ন আর্থিক পরিষেবা প্রদান করে।"
-                  },
-                  "isActive": true,
-                  "updatedAt": "2024-03-15T11:30:00.000Z"
-                }
               }
             }
           }
